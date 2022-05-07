@@ -11,7 +11,7 @@ gen64() {
 	ip64() {
 		echo "${array[$RANDOM % 16]}${array[$RANDOM % 16]}${array[$RANDOM % 16]}${array[$RANDOM % 16]}"
 	}
-	echo "$1:$(ip64):$(ip64):$(ip64):$(ip64)"
+	echo "$1:$(ip64):$(ip64):$(ip64)"
 }
 install_3proxy() {
     echo "installing 3proxy"
@@ -98,7 +98,7 @@ EOF
 
 gen_ifconfig() {
     cat <<EOF
-$(awk -F "/" '{print "ifconfig '$main_interface' inet6 add " $5 "/64"}' ${WORKDATA})
+$(awk -F "/" '{print "ifconfig '$main_interface' inet6 add " $5 "/112"}' ${WORKDATA})
 EOF
 }
 echo "installing apps"
@@ -112,11 +112,12 @@ WORKDATA="${WORKDIR}/data.txt"
 mkdir $WORKDIR && cd $_
 
 IP4=$(curl -4 -s icanhazip.com)
-IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
+#IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
+IP6=2a0d:3002:2100:a101:0004
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
-echo "How many proxy do you want to create? Example 500"
+echo "How many proxy do you want to create? prefix 112 max65,536"
 read COUNT
 
 FIRST_PORT=10001
