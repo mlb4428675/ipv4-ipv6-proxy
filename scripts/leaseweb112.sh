@@ -11,7 +11,7 @@ gen64() {
 	ip64() {
 		echo "${array[$RANDOM % 16]}${array[$RANDOM % 16]}${array[$RANDOM % 16]}${array[$RANDOM % 16]}"
 	}
-	echo "$1:$(ip64):$(ip64):$(ip64)"
+	echo "$1:$(ip64):$(ip64):$(ip64):$(ip64)"
 }
 install_3proxy() {
     echo "installing 3proxy"
@@ -46,11 +46,11 @@ gen_3proxy() {
     cat <<EOF
 daemon
 maxconn 2000
-nserver 8.8.8.8
-nserver 8.8.4.4
-nserver 2001:4860:4860::8888
-nserver 2001:4860:4860::8844
-nscache 65536
+#nserver 8.8.8.8
+#nserver 8.8.4.4
+#nserver 2001:4860:4860::8888
+#nserver 2001:4860:4860::8844
+#nscache 65536
 timeouts 1 5 30 60 180 1800 15 60
 setgid 65535
 setuid 65535
@@ -98,7 +98,7 @@ EOF
 
 gen_ifconfig() {
     cat <<EOF
-$(awk -F "/" '{print "ifconfig '$main_interface' inet6 add " $5 "/112"}' ${WORKDATA})
+$(awk -F "/" '{print "ifconfig '$main_interface' inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
 echo "installing apps"
@@ -112,12 +112,12 @@ WORKDATA="${WORKDIR}/data.txt"
 mkdir $WORKDIR && cd $_
 
 IP4=$(curl -4 -s icanhazip.com)
-#IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
-IP6=2a0d:3002:2100:a101:0004
+IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
+
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
-echo "How many proxy do you want to create? prefix 112 max65,536"
+echo "How many proxy do you want to create? prefix 112 max65,536, 64基本就无限了"
 read COUNT
 
 FIRST_PORT=10001
