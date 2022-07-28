@@ -102,9 +102,9 @@ $(awk -F "/" '{print "ifconfig '$main_interface' inet6 add " $5 "/64"}' ${WORKDA
 EOF
 }
 
-3proxyPath="/3proxy"
-# 这里的-d 参数判断$3proxyPath是否存在
-if [ ! -d "$3proxyPath"]; then
+proxyPath="/3proxy"
+# 这里的-d 参数判断$proxyPath是否存在
+if [ ! -d "$proxyPath"]; then
 echo "installing apps"
 yum -y install gcc net-tools bsdtar zip make >/dev/null
 install_3proxy
@@ -125,7 +125,7 @@ echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 echo "想创建的Proxy数量（prefix 112 max65,536, 64基本就无限了）"
 read COUNT
 
-if [ ! -d "$3proxyPath"]; then
+if [ ! -d "$proxyPath"]; then
   FIRST_PORT=10001
 else
   echo "再次添加proxy时，从哪个端口开始（必须手动确认开始的端口，避免之前的端口被覆盖）"
@@ -144,7 +144,7 @@ chmod +x ${WORKDIR}/boot_*.sh /etc/rc.local
 gen_3proxy >>/usr/local/etc/3proxy/3proxy.cfg
 
 # 这里只在初始的时候添加一次就够了
-if [ ! -d "$3proxyPath"]; then
+if [ ! -d "$proxyPath"]; then
 cat >>/etc/rc.local <<EOF
 systemctl start NetworkManager.service
 # ifup ${main_interface}
