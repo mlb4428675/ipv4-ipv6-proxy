@@ -6,6 +6,7 @@ random() {
 
 array=(1 2 3 4 5 6 7 8 9 0 a b c d e f)
 main_interface=$(ip route get 8.8.8.8 | awk -- '{printf $5}')
+current=`date "+%Y%m%d"`
 
 gen64() {
 	ip64() {
@@ -68,7 +69,7 @@ EOF
 }
 
 gen_proxy_file_for_user() {
-    cat >proxy.txt <<EOF
+    cat >proxy-$current.txt <<EOF
 $(awk -F "/" '{print $3 ":" $4 ":" $1 ":" $2 }' ${WORKDATA})
 EOF
 }
@@ -76,7 +77,7 @@ EOF
 upload_proxy() {
     cd $WORKDIR
     local PASS=$(random)
-    zip --password $PASS proxy.zip proxy.txt
+    zip --password $PASS proxy.zip proxy-$current.txt
     URL=$(curl -F "file=@proxy.zip" https://file.io)
 
     echo "Proxy is ready! Format IP:PORT:LOGIN:PASS"
