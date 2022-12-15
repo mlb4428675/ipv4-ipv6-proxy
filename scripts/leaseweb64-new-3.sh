@@ -77,6 +77,7 @@ EOF
 
 upload_proxy() {
     cd $WORKDIR
+    rm -rf proxy.zip
     local PASS=$(random)
     zip --password $PASS proxy.zip proxy-$current.txt
     URL=$(curl -F "file=@proxy.zip" https://file.io)
